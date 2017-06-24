@@ -1,16 +1,13 @@
 package net.md_5.bungee;
 
-import java.security.Security;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.command.ConsoleCommandSender;
+
+import java.security.Security;
+import java.util.Arrays;
 
 public class BungeeCordLauncher
 {
@@ -33,6 +30,7 @@ public class BungeeCordLauncher
             return;
         }
 
+        /* 1.7.10 c'est la vie frr
         if ( BungeeCord.class.getPackage().getSpecificationVersion() != null && System.getProperty( "IReallyKnowWhatIAmDoingISwear" ) == null )
         {
             Date buildDate = new SimpleDateFormat( "yyyyMMdd" ).parse( BungeeCord.class.getPackage().getSpecificationVersion() );
@@ -47,7 +45,7 @@ public class BungeeCordLauncher
                 System.err.println( "*** Server will start in 10 seconds ***" );
                 Thread.sleep( TimeUnit.SECONDS.toMillis( 10 ) );
             }
-        }
+        }*/
 
         BungeeCord bungee = new BungeeCord();
         ProxyServer.setInstance( bungee );
