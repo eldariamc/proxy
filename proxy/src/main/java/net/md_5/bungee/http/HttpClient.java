@@ -100,7 +100,7 @@ public class HttpClient
     }
 
     public static void getWithJavaIO(final String url, final Callback<String> callback) throws IOException {
-        //System.out.println("getWithJavaIO");
+        System.out.println("getWithJavaIO");
         Preconditions.checkNotNull( url, "url" );
         Preconditions.checkNotNull( callback, "callBack" );
 
