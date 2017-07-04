@@ -2,63 +2,42 @@ package net.md_5.bungee.connection;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
-import java.math.BigInteger;
-import java.net.InetSocketAddress;
-import java.net.URLEncoder;
-import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.logging.Level;
-import javax.crypto.SecretKey;
-
 import com.google.gson.Gson;
-import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.md_5.bungee.*;
-import net.md_5.bungee.api.Callback;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.Favicon;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.ServerPing;
+import net.md_5.bungee.api.*;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ListenerInfo;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.LoginEvent;
-import net.md_5.bungee.api.event.PostLoginEvent;
-import net.md_5.bungee.api.event.ProxyPingEvent;
+import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.chat.ComponentSerializer;
 import net.md_5.bungee.http.HttpClient;
-import net.md_5.bungee.netty.HandlerBoss;
+import net.md_5.bungee.jni.cipher.BungeeCipher;
 import net.md_5.bungee.netty.ChannelWrapper;
+import net.md_5.bungee.netty.HandlerBoss;
 import net.md_5.bungee.netty.PacketHandler;
 import net.md_5.bungee.netty.PipelineUtils;
 import net.md_5.bungee.netty.cipher.CipherDecoder;
 import net.md_5.bungee.netty.cipher.CipherEncoder;
 import net.md_5.bungee.protocol.DefinedPacket;
-import net.md_5.bungee.protocol.packet.Handshake;
-import net.md_5.bungee.protocol.packet.PluginMessage;
-import net.md_5.bungee.protocol.packet.EncryptionResponse;
-import net.md_5.bungee.protocol.packet.EncryptionRequest;
-import net.md_5.bungee.protocol.packet.Kick;
-import net.md_5.bungee.api.AbstractReconnectHandler;
-import net.md_5.bungee.api.event.PlayerHandshakeEvent;
-import net.md_5.bungee.api.event.PreLoginEvent;
-import net.md_5.bungee.jni.cipher.BungeeCipher;
 import net.md_5.bungee.protocol.Protocol;
 import net.md_5.bungee.protocol.ProtocolConstants;
-import net.md_5.bungee.protocol.packet.LegacyHandshake;
-import net.md_5.bungee.protocol.packet.LegacyPing;
-import net.md_5.bungee.protocol.packet.LoginRequest;
-import net.md_5.bungee.protocol.packet.LoginSuccess;
-import net.md_5.bungee.protocol.packet.PingPacket;
-import net.md_5.bungee.protocol.packet.StatusRequest;
-import net.md_5.bungee.protocol.packet.StatusResponse;
+import net.md_5.bungee.protocol.packet.*;
 import net.md_5.bungee.util.BoundedArrayList;
+
+import javax.crypto.SecretKey;
+import java.math.BigInteger;
+import java.net.InetSocketAddress;
+import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 @RequiredArgsConstructor
 public class InitialHandler extends PacketHandler implements PendingConnection
@@ -385,13 +364,15 @@ public class InitialHandler extends PacketHandler implements PendingConnection
         }
         String encodedHash = URLEncoder.encode( new BigInteger( sha.digest() ).toString( 16 ), "UTF-8" );
 
-        String authURL = "https://sessionserver.mojang.com/session/minecraft/hasJoined?username=" + encName + "&serverId=" + encodedHash;
+        String authURL = "https://api.eldaria.fr/auth/session/minecraft/hasJoined?username=" + encName + "&serverId=" + encodedHash;
+        System.out.println("authURL = " + authURL);
 
         Callback<String> handler = new Callback<String>()
         {
             @Override
             public void done(String result, Throwable error)
             {
+                System.out.println("result = " + result);
                 if ( error == null )
                 {
                     LoginResult obj = BungeeCord.getInstance().gson.fromJson( result, LoginResult.class );
@@ -402,16 +383,17 @@ public class InitialHandler extends PacketHandler implements PendingConnection
                         finish();
                         return;
                     }
-                    disconnect( "Not authenticated with Minecraft.net" );
+                    disconnect( "Not authenticated with Eldaria.fr" );
                 } else
                 {
                     disconnect( bungee.getTranslation( "mojang_fail" ) );
-                    bungee.getLogger().log( Level.SEVERE, "Error authenticating " + getName() + " with minecraft.net", error );
+                    bungee.getLogger().log( Level.SEVERE, "Error authenticating " + getName() + " with eldaria.fr", error );
                 }
             }
         };
 
-        HttpClient.get( authURL, ch.getHandle().eventLoop(), handler );
+        //HttpClient.get( authURL, ch.getHandle().eventLoop(), handler );
+        HttpClient.getWithJavaIO( authURL, handler );
     }
 
     private void finish()
