@@ -392,8 +392,8 @@ public class InitialHandler extends PacketHandler implements PendingConnection
             }
         };
 
-        //HttpClient.get( authURL, ch.getHandle().eventLoop(), handler );
-        HttpClient.getWithJavaIO( authURL, handler );
+        HttpClient.get( authURL, ch.getHandle().eventLoop(), handler );
+        //HttpClient.getWithJavaIO( authURL, handler );
     }
 
     private void finish()
