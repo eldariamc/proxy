@@ -137,47 +137,53 @@ public class HttpClient
 
         @Override
         public void run() {
-            while (true) {
-                for (JavaIOGetRequest request : requests) {
-                    try {
-                        HttpURLConnection connection = createUrlConnection(request.url);
-                        connection.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1");
-                        System.out.println("Reading data from " + request.url);
-                        InputStream inputStream = null;
-
+            try {
+                while (true) {
+                    for (JavaIOGetRequest request : requests) {
                         try {
-                            inputStream = connection.getInputStream();
-                            Scanner scanner = new Scanner(inputStream).useDelimiter("\\A");
-                            String result = scanner.hasNext() ? scanner.next() : ""; // IOUtils.toString(inputStream, Charsets.UTF_8);
-                            System.out.println("Successful read, server response was " + connection.getResponseCode());
-                            System.out.println("Response: " + result);
-                            request.callback.done(result, null);
-                        } catch (IOException ex) {
-                            if (inputStream != null)
-                                inputStream.close();
-                            inputStream = connection.getErrorStream();
-                            if (inputStream == null) {
-                                System.out.println("Request failed");
-                                request.callback.done(null, ex);
-                            }
+                            HttpURLConnection connection = createUrlConnection(request.url);
+                            connection.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1");
+                            System.out.println("Reading data from " + request.url);
+                            InputStream inputStream = null;
 
-                            System.out.println("Reading error page from " + request.url);
-                            Scanner scanner = new Scanner(inputStream).useDelimiter("\\A");
-                            String result = scanner.hasNext() ? scanner.next() : ""; //IOUtils.toString(inputStream, Charsets.UTF_8);
-                            System.out.println("Successful read, server response was " + connection.getResponseCode());
-                            System.out.println("Response: " + result);
-                            request.callback.done(result, null);
-                        } finally {
-                            if (inputStream != null)
-                                inputStream.close();
+                            try {
+                                inputStream = connection.getInputStream();
+                                Scanner scanner = new Scanner(inputStream).useDelimiter("\\A");
+                                String result = scanner.hasNext() ? scanner.next() : ""; // IOUtils.toString(inputStream, Charsets.UTF_8);
+                                System.out.println("Successful read, server response was " + connection.getResponseCode());
+                                System.out.println("Response: " + result);
+                                request.callback.done(result, null);
+                            } catch (IOException ex) {
+                                if (inputStream != null)
+                                    inputStream.close();
+                                inputStream = connection.getErrorStream();
+                                if (inputStream == null) {
+                                    System.out.println("Request failed");
+                                    request.callback.done(null, ex);
+                                }
+
+                                System.out.println("Reading error page from " + request.url);
+                                Scanner scanner = new Scanner(inputStream).useDelimiter("\\A");
+                                String result = scanner.hasNext() ? scanner.next() : ""; //IOUtils.toString(inputStream, Charsets.UTF_8);
+                                System.out.println("Successful read, server response was " + connection.getResponseCode());
+                                System.out.println("Response: " + result);
+                                request.callback.done(result, null);
+                            } finally {
+                                if (inputStream != null)
+                                    inputStream.close();
+                            }
+                        } catch (IOException ex) {
+                            System.err.println("Epic fail");
+                            ex.printStackTrace();
+                            request.callback.done(null, ex);
                         }
-                    } catch (IOException ex) {
-                        System.err.println("Epic fail");
-                        ex.printStackTrace();
-                        request.callback.done(null, ex);
+                        requests.remove(request);
                     }
-                    requests.remove(request);
                 }
+            } catch (Throwable t) {
+                System.err.println("!!!! MEGA EPIC FAIL !!!!");
+                t.printStackTrace();
+                requestsRunner = null;
             }
         }
     }
