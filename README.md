@@ -1,6 +1,6 @@
 Proxy
 =====
-Il s'agit d'un fork de [BungeeCord](SpigotMC/BungeeCord) au dernier stade compatible avec les protocoles 1.7.
+Il s'agit d'un fork de [BungeeCord](https://github.com/SpigotMC/BungeeCord) au dernier stade compatible avec les protocoles 1.7.
 Ce dernier a seulement reçus quelques modifications mineurs.
 
 Modifications
