@@ -1,19 +1,38 @@
-BungeeCord
-==========
-The most reliable Minecraft server portal suite.
-------------------------------------------------
-BungeeCord is a piece of Java software which allows a user to link multiple Minecraft servers together, allowing players to teleport between them and access advanced features. This makes it perfect for servers looking to expand their player base and spread across multiple gameplay styles.
+Proxy
+=====
+Il s'agit d'un fork de [BungeeCord](SpigotMC/BungeeCord) au dernier stade compatible avec les protocoles 1.7.
+Ce dernier a seulement reçus quelques modifications mineurs.
 
-History
--------
-For a long time developers have tried to create these mythical 'cloud' systems as outlined above. Until now, none of them have succeeded in making a fully open source and reliable 'cloud'. You may have already noticed my quoting of the word 'cloud', and this is one of the last times you will see it in this document. BungeeCord is **NOT** a 'cloud'. The actual meaning of the aforementioned word is quoted below:
+Modifications
+-------------
+- Suppression des 10 sec d'attente due à l'obsolescence de cette version
+- Changement du serveur de sessions (auth server)
+- Utilisation de `java.io` pour l'auth server (pour contourner un problème SSL lié à netty)
 
->The use of computing resources (hardware and software) that are delivered as a service over a network (typically the Internet).
+---
+![Logo Eldaria v2](https://eldaria.fr/assets/images/logo.png)
 
-BungeeCord does not do this and therefore is not a 'cloud'. Please do not refer to it as one, since the owners and operators of real clouds will get very angry, and you will be seen as ignorant and stupid. Instead I encourage you to use the term 'Server Port Suite' or something to that effect.
+Eldaria
+=======
+Eldaria est un serveur PvP Factions moddé qui a connus deux versions durant la première moitié de 2017.
+[Site eldaria.fr](https://eldaria.fr)
 
-Installation & Usage
---------------------
-For and in depth guide to the installation and usage of BungeeCord you should check the current primary download location. The current link is provided below for your convenience.
+Historique
+----------
+- J'ai rejoins le projet courant janvier 2017 après avoir été contacté par SeR0x42, une connaissance car nous avions un ami en commun.
+- Le serveur ouvre sa première version le 1er avril 2017
+- La v1 se termine prématurément à cause d'un disfonctionnement interne "du haut staff"
+- Le serveur réouvre ses portes pour lancer sa 2e version le 8 juillet 2017
+- Fin juillet 2017, le serveur a finalement subit un "flop", le projet est donc abandonné.
 
-<http://www.spigotmc.org/threads/bungeecord.392/>
+Équipe
+------
+| Pseudo          | Fonction Principale   | Autre activités                                  |
+| :-------------: | :-------------------: | :----------------------------------------------- |
+| **EnderRaider** | *Administrateur*      | Supervision du site Mineweb (v1), Build...       |
+| **iWarez**      | *Administrateur*      | Configuration de plugins tiers, Build...         |
+| **SeR0x42**     | *Administrateur* (v1) | Communication, Build...                          |
+| **Dabsunter**   | *Administrateur*      | Lead dev client/serveur                          |
+| **Uneo7**       | *SysAdmin*            | Ainsi que *WebMaster* durant la v2               |
+| **LordApo**     | *Web Host* (v1)       | Avait commencé à travailler sur le site de la v2 |
+Il s'agit ici des principales personalités ayant contribué à la réalisation du projet, bien sûr une fois le serveur ouvert, toute une équipe de modération était également présente, ainsi que quelques développeurs de plugins et Community Managers.
